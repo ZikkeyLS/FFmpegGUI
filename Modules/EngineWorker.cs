@@ -84,6 +84,8 @@ namespace FFmpegGUI.Modules
                 catch 
                 {
                     File.Delete(outputFolder + $"\\{file.Name}");
+                    System.Windows.Forms.Application.Restart();
+                    Application.Current.Shutdown();
                 }
             }
         }
