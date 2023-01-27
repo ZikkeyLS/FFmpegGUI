@@ -1,3 +1,3 @@
 # FFmpegGUI
 
-Создать папку Binary и закинуть туда FFmpeg.exe нужной версии.
+Скачать ffmpeg.exe и ffprobe.exe, закинуть в корень проекта.

@@ -36,11 +36,11 @@
 
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="99" Margin="0,293,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2" />
-            <Button Content="Базовые" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="15,32,440,32" />
-            <Button Content="Цвет" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="121,32,334,32" />
-            <Button Content="Зум" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="228,32,227,32" />
-            <Button Content="Рамки" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="335,32,120,32" />
-            <Button Content="Прочее" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="442,32,12,32" />
+            <Button Name="BaseButton" Content="Базовые" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="15,32,440,32" />
+            <Button Name="ColorButton" Content="Цвет" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="121,32,334,32" />
+            <Button Name="ZoomButton" Content="Зум" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="228,32,227,32" />
+            <Button Name="BorderButton" Content="Рамки" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="335,32,120,32" />
+            <Button Name="OtherButton" Content="Прочее" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="442,32,12,32" />
         </Grid>
 
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="300" Margin="0,390,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
@@ -49,12 +49,14 @@
 
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="110" Margin="0,713,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2" />
-            <ProgressBar Name="LoadProgress" Margin="15,15,15,67"/>
+            <ProgressBar Name="LoadProgress" Visibility="Hidden" Margin="15,15,15,67"/>
+            <Label Name="LoadLabel" Content="" Foreground="#828282" FontSize="12" Visibility="Hidden" Margin="16,48,17,0" />
         </Grid>
 
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="60" Margin="0,841,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2" />
-            <Button Name="Render" Content="Рендер" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="348,15,104,14" />
+            <Button Name="Render" Content="Рендер" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="316,16,136,13" />
+            <Button Name="Cancel" Content="Стоп" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="432,16,20,13" />
         </Grid>
     </Grid>
 </Window>

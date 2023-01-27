@@ -27,6 +27,7 @@ namespace FFmpegGUI.Modules
         private List<ConfigProfile> _profiles = new List<ConfigProfile>();
         private string _profilePath = "Profiles";
 
+        private string fullProfilePath => @"settings.profile";
         private const string extension = "profile";
 
         public ConfigWorker(ComboBox box, Label boxState, string profilePath = "Profiles")
@@ -49,10 +50,10 @@ namespace FFmpegGUI.Modules
             if (!Directory.Exists(_profilePath))
                 Directory.CreateDirectory(_profilePath);
 
-            if (!File.Exists(_profilePath + "settings.profile"))
-                File.Create(_profilePath + "settings.profile").Close();
-            else
-                ApplicationSettings.Instance = Newtonsoft.Json.JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(_profilePath + "settings.profile"));
+            if (!File.Exists(fullProfilePath))
+                File.Create(fullProfilePath).Close();
+            else if(_profiles.Count != 0)
+                ApplicationSettings.Instance = Newtonsoft.Json.JsonConvert.DeserializeObject<ApplicationSettings>(fullProfilePath);
 
             string[] files = Directory.GetFiles(_profilePath, $"*.{extension}");
             foreach (string file in files)
@@ -73,10 +74,9 @@ namespace FFmpegGUI.Modules
             _boxState.Content = Path.GetFileNameWithoutExtension(profile.Path);
 
             RenderSettings profileData = Newtonsoft.Json.JsonConvert.DeserializeObject<RenderSettings>(File.ReadAllText(_currentProfile.Path));
+
             if (profileData != null)
-            {
                 RenderSettings.Instance = profileData;
-            }
         }
 
         public ConfigProfile[] GetProfiles()
@@ -111,7 +111,7 @@ namespace FFmpegGUI.Modules
 
         public void UpdateMainProfile()
         {
-            File.WriteAllText(_profilePath + "settings.profile", Newtonsoft.Json.JsonConvert.SerializeObject(ApplicationSettings.Instance));
+            File.WriteAllText(fullProfilePath, Newtonsoft.Json.JsonConvert.SerializeObject(ApplicationSettings.Instance));
         }
 
         public void UpdateProfile()

@@ -13,9 +13,9 @@ namespace FFmpegGUI.Pages
         {
             InitializeComponent();
 
+            Resolution.SelectedIndex = RenderSettings.Instance.GetConvertIndex();
             UpdateResolutionName();
             Resolution.SelectionChanged += ResolutionSelectionChanged;
-            Resolution.SelectedItem = RenderSettings.Instance.GetConvertIndex();
 
             IntegerInput bitRateInput = new IntegerInput(BitRate, RenderSettings.Instance.PreferredVideoBitRate, 1);
             bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.PreferredVideoBitRate = value; };

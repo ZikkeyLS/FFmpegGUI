@@ -1,5 +1,4 @@
-﻿using FFmpeg.NET.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace FFmpegGUI.Profiles
@@ -15,25 +14,26 @@ namespace FFmpegGUI.Profiles
         public int PreferredAudioBitRate = 157;
         public string InputPath;
         public string OutputPath;
-        public VideoSize VideoResolution = VideoSize.Hd1080;
+        public string VideoResolution = "1920x1080";
 
-        private Dictionary<int, VideoSize> ResolutionConverter = new Dictionary<int, VideoSize>()
+        private Dictionary<int, string> ResolutionConverter = new Dictionary<int, string>()
         {
-            { 0,  VideoSize.Hd1080 },
-            { 1,  VideoSize._4K },
-            { 2,  VideoSize._2K },
-            { 3,  VideoSize.Hd720 },
-            { 4,  VideoSize.Hd480 }
+            { 0,  "1920x1080" },
+            { 1,  "3840x2160" },
+            { 2,  "2560x1440" },
+            { 3,  "1280x720" },
+            { 4,  "848x480" }
         };
 
-        private Dictionary<VideoSize, int> ResolutionDeconverter = new Dictionary<VideoSize, int>()
+        private Dictionary<string, int> ResolutionDeconverter = new Dictionary<string, int>()
         {
-            { VideoSize.Hd1080, 0 },
-            { VideoSize._4K, 1 },
-            { VideoSize._2K, 2 },
-            { VideoSize.Hd720, 3 },
-            { VideoSize.Hd480, 4 }
+            { "1920x1080", 0 },
+            { "3840x2160", 1 },
+            { "2560x1440", 2 },
+            { "1280x720", 3 },
+            { "848x480", 4 }
         };
+
 
         public void ConvertVideoSizeOption(int index)
         {

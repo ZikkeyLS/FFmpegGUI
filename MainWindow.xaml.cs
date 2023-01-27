@@ -1,8 +1,6 @@
 ﻿using FFmpegGUI.Modules;
 using FFmpegGUI.Pages;
 using FFmpegGUI.Profiles;
-using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media;
@@ -22,7 +20,6 @@ namespace FFmpegGUI
         private ConfigWorker _config;
 
         private string _previousFolder;
-        private float _progress;
 
         public MainWindow()
         {
@@ -32,28 +29,28 @@ namespace FFmpegGUI
             _config = new ConfigWorker(ConfigProfileSwitcher, ConfigProfileLabel);
             SaveConfig.Click += (o, e) => { _config.SaveProfile(); };
             UpdateConfig.Click += (o, e) => { _config.UpdateProfile(); };
+
             _swiper = new PageSwiper(MainFrame);
             _swiper.SetPanel(new BasePanel());
-            _engine = new EngineWorker();
-            _engine.ProgressChanged += (e) => { _progress = e * 100; };
+
+            _engine = new EngineWorker(LoadProgress, LoadLabel);
 
             InputPath.Text = RenderSettings.Instance.InputPath;
             InputPath.TextChanged += (e, o) => { RenderSettings.Instance.InputPath = InputPath.Text; };
             OutputPath.Text = RenderSettings.Instance.OutputPath;
             OutputPath.TextChanged += (e, o) => { RenderSettings.Instance.OutputPath = OutputPath.Text; };
 
+            BaseButton.Click += (o, e) => { _swiper.SetPanel(new BasePanel()); };
+            ColorButton.Click += (o, e) => { _swiper.SetPanel(new ColorPanel()); };
+            ZoomButton.Click += (o, e) => { _swiper.SetPanel(new ZoomPanel()); };
+            BorderButton.Click += (o, e) => { _swiper.SetPanel(new BorderPanel()); };
+            OtherButton.Click += (o, e) => { _swiper.SetPanel(new OtherPanel()); };
+
             InputPathButton.Click += (o, e) => { UpdateText(InputPath); };
             OutputPathButton.Click += (o, e) => { UpdateText(OutputPath); };
 
             Render.Click += (o, e) => { Run(); };
-
-            System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += new EventHandler((o, e) => { 
-                if(_progress >= 0 && _progress <= 100)
-                    LoadProgress.Value = _progress;
-            });
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
-            dispatcherTimer.Start();
+            Cancel.Click += (o, e) => { _engine.Cancel(); };
         }
 
         private void UpdateText(System.Windows.Controls.TextBox text)

@@ -1,39 +1,55 @@
-﻿using FFmpeg.NET;
+﻿using Xabe.FFmpeg;
 using FFmpegGUI.Profiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using System.Diagnostics;
+using System.Threading;
 
 namespace FFmpegGUI.Modules
 {
     internal class EngineWorker
     {
-        private Engine _engine;
-
         public string EnginePath { get; private set; }
+        public string EnginePathProbe { get; private set; }
 
-        public Action<float> ProgressChanged; 
+        private ProgressBar _bar;
+        private Label _data;
 
-        public EngineWorker()
+        private float _percentage;
+        private int _currentFile;
+        private int _allFiles;
+        private string _name;
+
+        private TimeSpan _currentTime;
+        private TimeSpan _finalTime;
+
+        private const int TimerMSDelay = 50;
+        private const int KB = 1024;
+
+        private CancellationTokenSource _renderToken = new CancellationTokenSource();
+
+        public EngineWorker(ProgressBar bar, Label data)
         {
-            Initialize();
-        }
+            _bar = bar;
+            _data = data;
 
-        public void Initialize()
-        {
-            byte[] exeBytes = Properties.Resources.ffmpeg;
-            EnginePath = Path.Combine(Path.GetTempPath(), "ffmpeg.exe");
-
-            if (!File.Exists(EnginePath))
-                using (FileStream exeFile = new FileStream(EnginePath, FileMode.CreateNew))
-                    exeFile.Write(exeBytes, 0, exeBytes.Length);
-
-            _engine = new Engine(EnginePath);
-
-            _engine.Complete += ConvertComplete;
-            _engine.Progress += ConvertProgress;
+            DispatcherTimer dispatcherTimer = new DispatcherTimer() { Interval = new TimeSpan(0, 0, 0, 0, TimerMSDelay) };
+            dispatcherTimer.Tick += new EventHandler((o, e) => {
+                if (_percentage >= 0 && _percentage <= 100)
+                {
+                    _bar.Value = _percentage;
+                    _data.Content = $"{_currentFile}/{_allFiles} процессов \n {_percentage}% - {_name} \n " +
+                    $"{_currentTime.Hours}:{_currentTime.Minutes}:{_currentTime.Seconds}/" +
+                    $"{_finalTime.Hours}:{_finalTime.Minutes}:{_finalTime.Seconds}";
+                }
+            });
+            dispatcherTimer.Start();
         }
 
         public async Task ConvertFilesWithSettings(string inputFolder, string outputFolder)
@@ -45,43 +61,63 @@ namespace FFmpegGUI.Modules
                 if (file.Extension != ".mp4" && file.Extension != ".avi")
                     fileInfo.Remove(file);
 
-            for(int i = 0; i < fileInfo.Count; i++)
+            _allFiles = fileInfo.Count;
+
+            for (int i = 0; i < fileInfo.Count; i++)
             {
                 FileInfo file = fileInfo[i];
 
-                var inputFile = new MediaFile(file.FullName);
-                var outputFile = new MediaFile(outputFolder + $"\\{file.Name}");
+                _currentFile = i;
+                _bar.Visibility = Visibility.Visible;
+                _data.Visibility = Visibility.Visible;
+                var data = await FFmpeg.GetMediaInfo(file.FullName);
+                var snippet = await FFmpeg.Conversions.FromSnippet.Convert(file.FullName, outputFolder + $"\\{file.Name}");
+                CompileVideoSettings(snippet, data);
+                CompileAudioSettings(snippet);
 
-                MetaData data = await _engine.GetMetaDataAsync(inputFile);
-                
-                var options = new ConversionOptions();
-                CompileVideoSettings(options, data);
-                CompileAudioSettings(options, data);
+                snippet.SetOverwriteOutput(true);
 
-                await _engine.ConvertAsync(inputFile, outputFile, options);
+                try
+                {
+                    IConversionResult result = await snippet.Start(_renderToken.Token);
+                }
+                catch 
+                {
+                    File.Delete(outputFolder + $"\\{file.Name}");
+                }
             }
         }
 
-        private void CompileVideoSettings(ConversionOptions options, MetaData data)
+        public void Cancel()
+        {
+            _renderToken.Cancel();
+        }
+
+
+        private void CompileVideoSettings(IConversion options, IMediaInfo data)
         {
             TimeSpan secondsFromStart = TimeSpan.FromSeconds(RenderSettings.Instance.SecondsFromStart);
             TimeSpan secondsFromEnd = TimeSpan.FromSeconds(RenderSettings.Instance.SecondsFromEnd);
 
-            options.CutMedia(secondsFromStart, data.Duration - secondsFromStart - secondsFromEnd); // 1) from start 2) length - from start - from end
-            options.VideoSize = RenderSettings.Instance.VideoResolution;
-            options.VideoBitRate = RenderSettings.Instance.PreferredVideoBitRate;
-            options.VideoFps = (int)data.VideoData.Fps;
+            TimeSpan mainDuration = data.Duration - secondsFromEnd;
+
+            options.AddParameter($"-ss {secondsFromStart} -to {mainDuration}"); // skip from start and end
+            options.AddParameter($"-s {RenderSettings.Instance.VideoResolution}");
+            options.SetVideoBitrate(RenderSettings.Instance.PreferredVideoBitRate * KB);
+            options.SetFrameRate(data.VideoStreams.FirstOrDefault().Framerate);
         }
 
-        private void CompileAudioSettings(ConversionOptions options, MetaData data)
+        private void CompileAudioSettings(IConversion options)
         {
-            options.AudioBitRate = RenderSettings.Instance.PreferredAudioBitRate;
+            options.SetAudioBitrate(RenderSettings.Instance.PreferredAudioBitRate * KB);
         }
 
+        /*
         private void ConvertComplete(object sender, FFmpeg.NET.Events.ConversionCompleteEventArgs e)
         {
-            string test = e.Input.FileInfo.Name.ToString();
-            Console.Write(test);
+            _percentage = -1;
+            _bar.Visibility = Visibility.Hidden;
+            _data.Visibility = Visibility.Hidden;
         }
 
         private void ConvertProgress(object sender, FFmpeg.NET.Events.ConversionProgressEventArgs e)
@@ -89,7 +125,11 @@ namespace FFmpegGUI.Modules
             if (!e.Frame.HasValue || !e.Fps.HasValue)
                 return;
 
-            ProgressChanged.Invoke(((float)e.ProcessedDuration.Seconds) / ((float)e.TotalDuration.Seconds));
+            _percentage = (float)Math.Round((e.ProcessedDuration.TotalSeconds / e.TotalDuration.TotalSeconds * 100));
+            _name = e.Output.FileInfo.Name;
+            _currentTime = e.ProcessedDuration;
+            _finalTime = e.TotalDuration;
         }
+        */
     }
 }
