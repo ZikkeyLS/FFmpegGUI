@@ -88,15 +88,24 @@ namespace FFmpegGUI.Modules
                 CompileVideoSettings(snippet, data);
                 CompileAudioSettings(snippet);
 
-                if (RenderSettings.Instance.GPURender)
+
+                switch ((RenderType)RenderSettings.Instance.RenderPrototype)
                 {
-                    snippet.AddParameter("-hwaccel vaapi", ParameterPosition.PreInput);
+                    case RenderType.CPU:
+                        break;
+                    case RenderType.Intel:
+                        snippet.UseHardwareAcceleration(HardwareAccelerator.d3d11va, VideoCodec.h264, VideoCodec.h264);
+                        break;
+                    case RenderType.AMD:
+                        snippet.UseHardwareAcceleration(HardwareAccelerator.d3d11va, VideoCodec.h264, VideoCodec.h264);
+                        break;
+                    case RenderType.Nvidia:
+                        snippet.UseHardwareAcceleration(HardwareAccelerator.cuvid, VideoCodec.h264_cuvid, VideoCodec.h264_cuvid);
+                        break;
                 }
-                else
-                {
-                    snippet.UseMultiThread(true);
-                    snippet.UseMultiThread(RenderSettings.Instance.Threads);
-                }
+
+                snippet.UseMultiThread(true);
+                snippet.UseMultiThread(RenderSettings.Instance.Threads);
 
                 try
                 {
@@ -107,6 +116,8 @@ namespace FFmpegGUI.Modules
                 catch
                 {
                     File.Delete(outputFolder + $"\\{file.Name}");
+
+                    MessageBox.Show("Ошибка при конвертации.(возможно проблема в типе рендера)");
 
                     if (_restart)
                     {

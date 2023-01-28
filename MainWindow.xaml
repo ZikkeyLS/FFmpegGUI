@@ -62,9 +62,11 @@
             <Label FontSize="11" Content="Тип рендера" HorizontalContentAlignment="Center" Foreground="#828282" FontWeight="Bold" FontFamily="Arial" Margin="118,4,330,48"/>
             <ComboBox Name="RenderType" Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Margin="120,27,329,14">
                 <Label Content="CPU" />
-                <Label Content="GPU" />
+                <Label Content="GPU (Intel)" />
+                <Label Content="GPU (AMD)" />
+                <Label Content="GPU (Nvidia)" />
             </ComboBox>
-            <Label Name="RenderTypeLabel" IsHitTestVisible="False" VerticalContentAlignment="Center" Content="" Margin="120,27,343,15" />
+            <Label Name="RenderTypeLabel" IsHitTestVisible="False" VerticalContentAlignment="Center" Content="" Margin="120,27,346,15" />
         </Grid>
     </Grid>
 </Window>

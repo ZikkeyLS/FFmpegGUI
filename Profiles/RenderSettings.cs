@@ -14,7 +14,7 @@ namespace FFmpegGUI.Profiles
         public int PreferredAudioBitRate = 157;
         public int Threads = 1;
 
-        public bool GPURender = false;
+        public int RenderPrototype = 0;
 
         public string InputPath;
         public string OutputPath;
@@ -48,5 +48,13 @@ namespace FFmpegGUI.Profiles
         {
             return ResolutionDeconverter[VideoResolution];
         }
+    }
+
+    public enum RenderType : int
+    {
+        CPU = 0,
+        Intel,
+        AMD,
+        Nvidia
     }
 }
