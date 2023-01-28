@@ -14,7 +14,7 @@ namespace FFmpegGUI.Network
         private bool isRunning;
         private string key;
 
-        public User(string key)
+        public void SendKey(string key)
         {
             Instance = this;
 
@@ -58,6 +58,7 @@ namespace FFmpegGUI.Network
         private void RequestAuthorization(string key)
         {
             Message message = Message.Create(MessageSendMode.Reliable, MessageId.RequestAuthorization);
+            message.AddString(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
             message.AddString(key);
 
             client.Send(message);
@@ -70,6 +71,7 @@ namespace FFmpegGUI.Network
             Authorization.Current.ProcessStatus(status);
 
             Instance.client.Disconnect();
+            Instance.isRunning = false;
         }
     }
 

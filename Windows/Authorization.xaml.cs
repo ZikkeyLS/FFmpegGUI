@@ -1,19 +1,7 @@
 ﻿using FFmpegGUI.Network;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FFmpegGUI.Windows
 {
@@ -24,16 +12,17 @@ namespace FFmpegGUI.Windows
     {
         public static Authorization Current;
 
-        private User _user;
+        private User _user = new User();
 
         public Authorization()
         {
+            Current = this;
             InitializeComponent();
             TryMoveToMain();
 
-            Current = this;
-
-            KeySend.Click += (o, e) => { _user = new User(KeyInput.Text); };
+            Close.Click += (o, e) => { Close(); };
+            Minimize.Click += (o, e) => { WindowState = WindowState.Minimized; };
+            KeySend.Click += (o, e) => { _user.SendKey(KeyInput.Text); };
         }
 
         public void TryMoveToMain()
@@ -49,12 +38,17 @@ namespace FFmpegGUI.Windows
             
             if(applicationKey != null)
             {
-                // _user = new User();
+                _user.SendKey(applicationKey);
             }
         }
 
         public void MoveToMain()
         {
+            RegistryKey user = Registry.CurrentUser;
+
+            RegistryKey key = user.OpenSubKey("FFmpegGUI", true);
+            key.SetValue("applicationKey", KeyInput.Text);
+
             MainWindow main = new MainWindow();
             main.Show();
 
@@ -63,11 +57,29 @@ namespace FFmpegGUI.Windows
 
         public void ProcessStatus(ushort status)
         {
-
             Application.Current.Dispatcher.Invoke(() =>
             {
-                    MoveToMain();
+                switch (status) 
+                {
+                    case 0:
+                        MoveToMain();
+                        break;
+                    case 1:
+                        Status.Content = "Неправильный ключ!";
+                        break;
+                    case 2:
+                        Status.Content = "Ключ уже используется!";
+                        break;
+                    case 3:
+                        Status.Content = "Ошибка на сервере!";
+                        break;
+                }
             });
+        }
+
+        private void OnLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

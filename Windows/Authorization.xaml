@@ -5,11 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFmpegGUI"
         mc:Ignorable="d"
-        Title="FFmpegGUI / Login" Height="200" Width="300">
+        Title="FFmpegGUI / Login" Height="200" Width="300" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None" MouseLeftButtonDown="OnLeftButtonDown">
     <Grid Background="#FF131322">
-        <Label FontSize="12" Content="Введите ключ регистрации:" Margin="10,24,66,76" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
-        <TextBox Name="KeyInput" Padding="5, 0, 0, 0" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#FF828282" VerticalContentAlignment="Center" TextWrapping="Wrap" Margin="14,60,16,65" FontSize="12" FontFamily="Arial"/>
-        <Button Name="KeySend" Content="Войти" FontSize="11" BorderThickness="2" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#828282" Margin="14,108,178,15">
-        </Button>
+        <Label FontSize="12" Content="Введите ключ регистрации:" Margin="11,50,65,126" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <TextBox Name="KeyInput" Padding="5, 0, 0, 0" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#FF828282" VerticalContentAlignment="Center" TextWrapping="Wrap" Margin="14,82,16,82" FontSize="12" FontFamily="Arial"/>
+        <Button Name="KeySend" Content="Войти" FontSize="11" BorderThickness="2" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#828282" Margin="14,131,178,25" />
+        <Label Name="Status" Content="" Foreground="Red" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="128,128,16,30" />
+        <Button Name="Close" Content="X" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#828282" FontSize="10" Margin="266,4,0,0" VerticalAlignment="Top" Width="26" Height="25"/>
+        <Button Name="Minimize" Content="–"  BorderBrush="#1E1E2E" Background="Transparent" Foreground="#828282" FontSize="15" Margin="196,4,0,0" VerticalAlignment="Top" Width="26" Height="25"/>
     </Grid>
 </Window>
