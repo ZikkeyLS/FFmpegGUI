@@ -13,6 +13,7 @@ namespace FFmpegGUI.Windows
         public static Authorization Current;
 
         private User _user = new User();
+        private string _applicationKey;
 
         public Authorization()
         {
@@ -34,11 +35,11 @@ namespace FFmpegGUI.Windows
             if(key == null)
                 key = user.CreateSubKey("FFmpegGUI");
 
-            string applicationKey = (string)key.GetValue("applicationKey");
+            _applicationKey = (string)key.GetValue("applicationKey");
             
-            if(applicationKey != null)
+            if(_applicationKey != null && _applicationKey != "")
             {
-                _user.SendKey(applicationKey);
+                _user.SendKey(_applicationKey);
             }
         }
 
@@ -47,7 +48,7 @@ namespace FFmpegGUI.Windows
             RegistryKey user = Registry.CurrentUser;
 
             RegistryKey key = user.OpenSubKey("FFmpegGUI", true);
-            key.SetValue("applicationKey", KeyInput.Text);
+            key.SetValue("applicationKey", _applicationKey);
 
             MainWindow main = new MainWindow();
             main.Show();

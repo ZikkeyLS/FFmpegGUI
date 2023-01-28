@@ -1,4 +1,5 @@
-﻿using FFmpegGUI.Windows;
+﻿using FFmpegGUI.Profiles;
+using FFmpegGUI.Windows;
 using Riptide;
 using Riptide.Utils;
 using System;
@@ -69,6 +70,9 @@ namespace FFmpegGUI.Network
         private static void ResponseAuthorization(Message message)
         {
             ushort status = message.GetUShort();
+            long ticks = message.GetLong();
+
+            ApplicationSettings.Instance.ExpirationTime = new DateTime(ticks);
             Authorization.Current.ProcessStatus(status);
 
             Instance.client.Disconnect();

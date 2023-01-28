@@ -27,6 +27,7 @@ namespace FFmpegGUI
         {
             Icon = BitmapSource.Create(1, 1, 0, 0, PixelFormats.Bgra32, null, new byte[4], 4);
             InitializeComponent();
+            Title = $"FFmpegGUI / Лицензия до {ApplicationSettings.Instance.ExpirationTime.ToString("dd.MM.yyyy")}";
 
             _config = new ConfigWorker(ConfigProfileSwitcher, ConfigProfileLabel);
             SaveConfig.Click += (o, e) => { _config.SaveProfile(); };

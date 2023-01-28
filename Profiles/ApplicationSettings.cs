@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FFmpegGUI.Profiles
 {
@@ -12,5 +8,6 @@ namespace FFmpegGUI.Profiles
         public static ApplicationSettings Instance = new ApplicationSettings();
 
         public int ProfileIndex { get; set; } = 0;
+        public DateTime ExpirationTime { get; set; }
     }
 }
