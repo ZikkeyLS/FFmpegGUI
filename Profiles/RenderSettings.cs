@@ -12,6 +12,10 @@ namespace FFmpegGUI.Profiles
         public int SecondsFromEnd = 0;
         public int PreferredVideoBitRate = 800;
         public int PreferredAudioBitRate = 157;
+        public int Threads = 1;
+
+        public bool GPURender = false;
+
         public string InputPath;
         public string OutputPath;
         public string VideoResolution = "1920x1080";

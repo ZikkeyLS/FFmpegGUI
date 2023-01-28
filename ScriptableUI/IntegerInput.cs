@@ -15,9 +15,9 @@ namespace FFmpegGUI.ScriptableUI
         private int _min = 0;
         private int _max = 100000;
 
-        public IntegerInput(Grid integerElement, int initial = 0, int min = 0, int max = 100000)
+        public IntegerInput(IntInput integerElement, int initial = 0, int min = 0, int max = 100000)
         {
-            UIElementCollection children = integerElement.Children;
+            UIElementCollection children = integerElement.GetGrid().Children;
 
             _input = (TextBox)children[0];
             _buttonIncrease = (Button)children[2];

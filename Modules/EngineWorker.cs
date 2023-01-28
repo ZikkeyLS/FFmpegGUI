@@ -21,17 +21,19 @@ namespace FFmpegGUI.Modules
         private ProgressBar _bar;
         private Label _data;
 
-        private float _percentage;
+        private float _percentage = -1;
         private int _currentFile;
         private int _allFiles;
         private string _name;
 
+        private DateTime _startTime;
         private TimeSpan _currentTime;
         private TimeSpan _finalTime;
 
         private const int TimerMSDelay = 50;
         private const int KB = 1024;
 
+        private bool _restart = false;
         private CancellationTokenSource _renderToken = new CancellationTokenSource();
 
         public EngineWorker(ProgressBar bar, Label data)
@@ -43,10 +45,16 @@ namespace FFmpegGUI.Modules
             dispatcherTimer.Tick += new EventHandler((o, e) => {
                 if (_percentage >= 0 && _percentage <= 100)
                 {
+                    TimeSpan currentTime = TimeSpan.FromTicks(DateTime.Now.Ticks - _startTime.Ticks);
+
+                    _bar.Visibility = Visibility.Visible;
+                    _data.Visibility = Visibility.Visible;
+
                     _bar.Value = _percentage;
-                    _data.Content = $"{_currentFile}/{_allFiles} процессов \n {_percentage}% - {_name} \n " +
-                    $"{_currentTime.Hours}:{_currentTime.Minutes}:{_currentTime.Seconds}/" +
-                    $"{_finalTime.Hours}:{_finalTime.Minutes}:{_finalTime.Seconds}";
+                    _data.Content = $"{_currentFile}/{_allFiles} файлов \n {_percentage}% - {_name} \n " +
+                    $"{_currentTime}/" +
+                    $"{_finalTime} " + 
+                    $"({currentTime.ToString("hh':'mm':'ss")})";
                 }
             });
             dispatcherTimer.Start();
@@ -68,30 +76,63 @@ namespace FFmpegGUI.Modules
                 FileInfo file = fileInfo[i];
 
                 _currentFile = i;
-                _bar.Visibility = Visibility.Visible;
-                _data.Visibility = Visibility.Visible;
+
+                string fullName = outputFolder + $"\\{file.Name}";
+                _name = Path.GetFileName(fullName);
+
+                if (File.Exists(fullName))
+                    File.Delete(fullName);
+
                 var data = await FFmpeg.GetMediaInfo(file.FullName);
-                var snippet = await FFmpeg.Conversions.FromSnippet.Convert(file.FullName, outputFolder + $"\\{file.Name}");
+                var snippet = await FFmpeg.Conversions.FromSnippet.Convert(file.FullName, fullName);
                 CompileVideoSettings(snippet, data);
                 CompileAudioSettings(snippet);
 
-                snippet.SetOverwriteOutput(true);
+                if (RenderSettings.Instance.GPURender)
+                {
+                    snippet.AddParameter("-hwaccel vaapi", ParameterPosition.PreInput);
+                }
+                else
+                {
+                    snippet.UseMultiThread(true);
+                    snippet.UseMultiThread(RenderSettings.Instance.Threads);
+                }
 
                 try
                 {
+                    snippet.OnProgress += SnippetOnProgress;
+                    _startTime = DateTime.Now;
                     IConversionResult result = await snippet.Start(_renderToken.Token);
                 }
-                catch 
+                catch
                 {
                     File.Delete(outputFolder + $"\\{file.Name}");
-                    System.Windows.Forms.Application.Restart();
-                    Application.Current.Shutdown();
+
+                    if (_restart)
+                    {
+                        System.Windows.Forms.Application.Restart();
+                        Application.Current.Shutdown();
+                    }
+                }
+                finally
+                {
+                    _percentage = -1;
+                    _bar.Visibility = Visibility.Hidden;
+                    _data.Visibility = Visibility.Hidden;
                 }
             }
         }
 
-        public void Cancel()
+        private void SnippetOnProgress(object sender, Xabe.FFmpeg.Events.ConversionProgressEventArgs args)
         {
+            _percentage = (float)args.Percent;
+            _currentTime = args.Duration;
+            _finalTime = args.TotalLength;
+        }
+
+        public void Cancel(bool restart = true)
+        {
+            _restart = restart;
             _renderToken.Cancel();
         }
 
@@ -113,25 +154,5 @@ namespace FFmpegGUI.Modules
         {
             options.SetAudioBitrate(RenderSettings.Instance.PreferredAudioBitRate * KB);
         }
-
-        /*
-        private void ConvertComplete(object sender, FFmpeg.NET.Events.ConversionCompleteEventArgs e)
-        {
-            _percentage = -1;
-            _bar.Visibility = Visibility.Hidden;
-            _data.Visibility = Visibility.Hidden;
-        }
-
-        private void ConvertProgress(object sender, FFmpeg.NET.Events.ConversionProgressEventArgs e)
-        {
-            if (!e.Frame.HasValue || !e.Fps.HasValue)
-                return;
-
-            _percentage = (float)Math.Round((e.ProcessedDuration.TotalSeconds / e.TotalDuration.TotalSeconds * 100));
-            _name = e.Output.FileInfo.Name;
-            _currentTime = e.ProcessedDuration;
-            _finalTime = e.TotalDuration;
-        }
-        */
     }
 }

@@ -1,8 +1,10 @@
 ﻿using FFmpegGUI.Modules;
 using FFmpegGUI.Pages;
 using FFmpegGUI.Profiles;
+using FFmpegGUI.ScriptableUI;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using WK.Libraries.BetterFolderBrowserNS;
@@ -32,13 +34,23 @@ namespace FFmpegGUI
 
             _swiper = new PageSwiper(MainFrame);
             _swiper.SetPanel(new BasePanel());
-
             _engine = new EngineWorker(LoadProgress, LoadLabel);
+
+            IntegerInput bitRateInput = new IntegerInput(Threads, RenderSettings.Instance.Threads, 1, 16);
+            bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.Threads = value; };
 
             InputPath.Text = RenderSettings.Instance.InputPath;
             InputPath.TextChanged += (e, o) => { RenderSettings.Instance.InputPath = InputPath.Text; };
             OutputPath.Text = RenderSettings.Instance.OutputPath;
             OutputPath.TextChanged += (e, o) => { RenderSettings.Instance.OutputPath = OutputPath.Text; };
+
+            RenderType.SelectedIndex = RenderSettings.Instance.GPURender ? 1 : 0;
+            RenderTypeLabel.Content = ((Label)RenderType.SelectedItem).Content;
+            RenderType.SelectionChanged += (e, o) => 
+            {
+                RenderTypeLabel.Content = ((Label)RenderType.SelectedItem).Content;
+                RenderSettings.Instance.GPURender = RenderType.SelectedIndex == 1;
+            };
 
             BaseButton.Click += (o, e) => { _swiper.SetPanel(new BasePanel()); };
             ColorButton.Click += (o, e) => { _swiper.SetPanel(new ColorPanel()); };
@@ -75,5 +87,9 @@ namespace FFmpegGUI
             await _engine.ConvertFilesWithSettings(InputPath.Text, OutputPath.Text);
         }
 
+        private void OnClose(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _engine.Cancel(false);
+        }
     }
 }

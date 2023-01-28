@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFmpegGUI"
         mc:Ignorable="d"
-        Title="FFmpegGUI / Лицензия до 30.12.2023" Height="950" Width="600" WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" >
+        Title="FFmpegGUI / Лицензия до 30.12.2023" Height="950" Width="600" WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="OnClose" >
     <Grid Background="#FF131322">
         <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="110" Margin="0,16,0,0" Width="551">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2"></Border>
@@ -47,16 +47,24 @@
             <Frame Name="MainFrame" Background="Transparent" NavigationUIVisibility="Hidden" />
         </Grid>
 
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="110" Margin="0,713,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="100" Margin="0,713,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2" />
-            <ProgressBar Name="LoadProgress" Visibility="Hidden" Margin="15,15,15,67"/>
-            <Label Name="LoadLabel" Content="" Foreground="#828282" FontSize="12" Visibility="Hidden" Margin="16,48,17,0" />
+            <ProgressBar Name="LoadProgress" Visibility="Hidden"  Margin="15,15,15,67"/>
+            <Label Name="LoadLabel" Foreground="#828282" Visibility="Hidden" FontSize="12" Margin="15,36,18,2" />
         </Grid>
 
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="60" Margin="0,841,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Top" Height="75" Margin="0,821,0,0" Width="552" RenderTransformOrigin="0.5,0.5">
             <Border BorderBrush="#FF1E1E2E" BorderThickness="2" />
-            <Button Name="Render" Content="Рендер" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="316,16,136,13" />
-            <Button Name="Cancel" Content="Стоп" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="432,16,20,13" />
+            <Button Name="Render" Content="Рендер" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="345,24,114,13" />
+            <Button Name="Cancel" Content="Стоп" FontSize="11" BorderBrush="#1E1E2E" BorderThickness="2" Background="Transparent" Foreground="#828282" Margin="449,25,10,13" />
+            <Label FontSize="11" Content="Потоков" HorizontalContentAlignment="Center" Foreground="#828282" FontWeight="Bold" FontFamily="Arial" Margin="232,4,216,48"/>
+            <local:IntInput x:Name="Threads" Margin="232,24,216,12" />
+            <Label FontSize="11" Content="Тип рендера" HorizontalContentAlignment="Center" Foreground="#828282" FontWeight="Bold" FontFamily="Arial" Margin="118,4,330,48"/>
+            <ComboBox Name="RenderType" Background="Transparent" Foreground="Transparent" BorderBrush="Transparent" Margin="120,27,329,14">
+                <Label Content="CPU" />
+                <Label Content="GPU" />
+            </ComboBox>
+            <Label Name="RenderTypeLabel" IsHitTestVisible="False" VerticalContentAlignment="Center" Content="" Margin="120,27,343,15" />
         </Grid>
     </Grid>
 </Window>
