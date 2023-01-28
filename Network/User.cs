@@ -27,13 +27,14 @@ namespace FFmpegGUI.Network
 
         private void Loop()
         {
-            client = new Client
+            client = new Client()
             {
                 TimeoutTime = ushort.MaxValue // Max value timeout to avoid getting timed out for as long as possible when testing with very high loss rates (if all heartbeat messages are lost during this period of time, it will trigger a disconnection)
             };
             client.Connected += (s, e) => Connected();
             client.Disconnected += (s, e) => Disconnected();
-            client.Connect("127.0.0.1:7777");
+            client.ConnectionFailed += (s, e) => { Authorization.Current.ProcessStatus(3); isRunning = false; };
+            client.Connect("127.0.0.1:7777", 2);
 
             while (isRunning)
             {
