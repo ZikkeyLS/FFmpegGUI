@@ -1,0 +1,15 @@
+﻿<Window x:Class="FFmpegGUI.Windows.Authorization"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FFmpegGUI"
+        mc:Ignorable="d"
+        Title="FFmpegGUI / Login" Height="200" Width="300">
+    <Grid Background="#FF131322">
+        <Label FontSize="12" Content="Введите ключ регистрации:" Margin="10,24,66,76" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <TextBox Name="KeyInput" Padding="5, 0, 0, 0" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#FF828282" VerticalContentAlignment="Center" TextWrapping="Wrap" Margin="14,60,16,65" FontSize="12" FontFamily="Arial"/>
+        <Button Name="KeySend" Content="Войти" FontSize="11" BorderThickness="2" BorderBrush="#1E1E2E" Background="Transparent" Foreground="#828282" Margin="14,108,178,15">
+        </Button>
+    </Grid>
+</Window>
