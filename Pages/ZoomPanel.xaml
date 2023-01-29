@@ -7,17 +7,16 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="552"
       Title="ZoomPanel">
-
     <Grid>
         <Border BorderBrush="#FF1E1E2E" BorderThickness="2" Margin="0,0,0,65" />
         <Label FontSize="12" Content="Начало:" Margin="14,18,434,256" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
-        <local:IntInput x:Name="BitRate" Margin="130,14,320,252" />
+        <local:TimeInput Margin="130,15,319,251" />
         <Label FontSize="12" Content="Частота:" Margin="14,70,434,204" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
-        <local:IntInput x:Name="BitRate_Copy" Margin="130,66,320,200" />
+        <local:IntInput x:Name="BitRate_Copy" Margin="130,66,318,200" />
         <Label FontSize="12" Content="Длительность:" Margin="14,123,434,151" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
-        <local:IntInput x:Name="BitRate_Copy1" Margin="130,119,320,147" />
+        <local:IntInput x:Name="BitRate_Copy1" Margin="130,119,318,147" />
         <Label FontSize="12" Content="Масштаб:" Margin="14,178,434,96" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
-        <local:IntInput x:Name="BitRate_Copy2" Margin="130,174,318,92" />
+        <local:IntInput x:Name="BitRate_Copy2" Margin="130,174,317,92" />
         <Label FontSize="12" Content="Приближение:" Margin="281,19,167,255" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
         <local:IntInput x:Name="BitRate_Copy3" Margin="397,15,52,251" />
         <Label FontSize="12" Content="Отдаление:" Margin="281,71,167,203" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>

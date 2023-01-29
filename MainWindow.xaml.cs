@@ -1,7 +1,6 @@
 ﻿using FFmpegGUI.Modules;
 using FFmpegGUI.Pages;
 using FFmpegGUI.Profiles;
-using FFmpegGUI.ScriptableUI;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -37,8 +36,8 @@ namespace FFmpegGUI
             _swiper.SetPanel(new BasePanel());
             _engine = new EngineWorker(LoadProgress, LoadLabel);
 
-            IntegerInput bitRateInput = new IntegerInput(Threads, RenderSettings.Instance.Threads, 1, 16);
-            bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.Threads = value; };
+            Threads.Initialize(RenderSettings.Instance.Threads, 1, 16);
+            Threads.OnValueChanged += (value) => { RenderSettings.Instance.Threads = value; };
 
             InputPath.Text = RenderSettings.Instance.InputPath;
             InputPath.TextChanged += (e, o) => { RenderSettings.Instance.InputPath = InputPath.Text; };

@@ -84,6 +84,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\TimeInput.xaml.cs">
+      <DependentUpon>TimeInput.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\IntInput.xaml.cs">
       <DependentUpon>IntInput.xaml</DependentUpon>
     </Compile>
@@ -109,10 +112,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScriptableUI\IntegerInput.cs" />
     <Compile Include="Windows\Authorization.xaml.cs">
       <DependentUpon>Authorization.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\TimeInput.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\IntInput.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

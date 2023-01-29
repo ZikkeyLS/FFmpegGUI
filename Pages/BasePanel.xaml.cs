@@ -1,5 +1,4 @@
 ﻿using FFmpegGUI.Profiles;
-using FFmpegGUI.ScriptableUI;
 using System.Windows.Controls;
 
 namespace FFmpegGUI.Pages
@@ -16,17 +15,17 @@ namespace FFmpegGUI.Pages
             Resolution.SelectedIndex = RenderSettings.Instance.GetConvertIndex();
             Resolution.SelectionChanged += ResolutionSelectionChanged;
 
-            IntegerInput bitRateInput = new IntegerInput(BitRate, RenderSettings.Instance.VideoBitRate, 1);
+            BitRate.Initialize(RenderSettings.Instance.VideoBitRate, 1);
             BitRate.SetUnit("KB");
-            bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.VideoBitRate = value; };
+            BitRate.OnValueChanged += (value) => { RenderSettings.Instance.VideoBitRate = value; };
 
-            IntegerInput cutFromStartInput = new IntegerInput(CutFromStart, RenderSettings.Instance.SecondsFromStart);
+            CutFromStart.Initialize(RenderSettings.Instance.SecondsFromStart);
             CutFromStart.SetUnit("сек");
-            cutFromStartInput.OnValueChanged += (value) => { RenderSettings.Instance.SecondsFromStart = value; };
+            CutFromStart.OnValueChanged += (value) => { RenderSettings.Instance.SecondsFromStart = value; };
 
-            IntegerInput cutFromEndInput = new IntegerInput(CutFromEnd, RenderSettings.Instance.SecondsFromEnd);
+            CutFromEnd.Initialize(RenderSettings.Instance.SecondsFromEnd);
             CutFromEnd.SetUnit("сек");
-            cutFromEndInput.OnValueChanged += (value) => { RenderSettings.Instance.SecondsFromEnd = value; };
+            CutFromEnd.OnValueChanged += (value) => { RenderSettings.Instance.SecondsFromEnd = value; };
         }
 
         private void ResolutionSelectionChanged(object sender, SelectionChangedEventArgs e)

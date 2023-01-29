@@ -1,5 +1,4 @@
 ﻿using FFmpegGUI.Profiles;
-using FFmpegGUI.ScriptableUI;
 using System.Windows.Controls;
 
 namespace FFmpegGUI.Pages
