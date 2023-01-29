@@ -10,8 +10,8 @@ namespace FFmpegGUI.Profiles
 
         public int SecondsFromStart = 0;
         public int SecondsFromEnd = 0;
-        public int PreferredVideoBitRate = 800;
-        public int PreferredAudioBitRate = 157;
+        public int VideoBitRate = 800;
+        public int AudioBitRate = 157;
         public int Threads = 1;
 
         public int RenderPrototype = 0;

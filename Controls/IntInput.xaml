@@ -4,12 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FFmpegGUI"
-             mc:Ignorable="d" Height="34" Width="104">
+             mc:Ignorable="d" Height="34" Width="103">
     <Grid x:Name="Grid">
-        <TextBox HorizontalAlignment="Left" VerticalContentAlignment="Center" Padding="5, 0, 0, 0" TextWrapping="Wrap" Text="800" VerticalAlignment="Top" Width="82" Height="34"/>
-        <Label Name="Unit" Margin="52,4,23,1" HorizontalContentAlignment="Center" />
-        <Button Content="^" HorizontalAlignment="Left" Margin="82,0,0,0" VerticalAlignment="Top" Width="22" Height="17"/>
-        <Button Content="^" HorizontalAlignment="Left" Margin="82,17,0,0" VerticalAlignment="Top" Width="22" Height="17" RenderTransformOrigin="0.5,0.5">
+        <TextBox Background="Transparent" Foreground="#828282" BorderBrush="#1E1E2E" HorizontalAlignment="Left" VerticalContentAlignment="Center" Padding="5, 0, 0, 0" TextWrapping="Wrap" Text="800" VerticalAlignment="Top" Width="82" Height="34"/>
+        <Label Name="Unit" Margin="52,4,23,1" Foreground="#828282" HorizontalContentAlignment="Center" />
+        <Button Background="Transparent" BorderBrush="#1E1E2E" Foreground="#828282" Content="^" HorizontalAlignment="Left" Margin="81,0,0,0" VerticalAlignment="Top" Width="22" Height="17"/>
+        <Button Background="Transparent" BorderBrush="#1E1E2E" Foreground="#828282" Content="^" HorizontalAlignment="Left" Margin="81,17,0,0" VerticalAlignment="Top" Width="22" Height="17" RenderTransformOrigin="0.5,0.5">
             <Button.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

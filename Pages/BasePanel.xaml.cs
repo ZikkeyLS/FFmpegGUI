@@ -17,9 +17,9 @@ namespace FFmpegGUI.Pages
             UpdateResolutionName();
             Resolution.SelectionChanged += ResolutionSelectionChanged;
 
-            IntegerInput bitRateInput = new IntegerInput(BitRate, RenderSettings.Instance.PreferredVideoBitRate, 1);
+            IntegerInput bitRateInput = new IntegerInput(BitRate, RenderSettings.Instance.VideoBitRate, 1);
             BitRate.SetUnit("KB");
-            bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.PreferredVideoBitRate = value; };
+            bitRateInput.OnValueChanged += (value) => { RenderSettings.Instance.VideoBitRate = value; };
 
             IntegerInput cutFromStartInput = new IntegerInput(CutFromStart, RenderSettings.Instance.SecondsFromStart);
             CutFromStart.SetUnit("сек");

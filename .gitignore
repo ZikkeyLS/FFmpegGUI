@@ -3,4 +3,5 @@ bin
 obj
 ffmpeg.exe
 ffprobe.exe
+ffplay.exe
 TestVideo

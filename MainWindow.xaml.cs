@@ -77,7 +77,7 @@ namespace FFmpegGUI
             }
         }
 
-        public async void Run()
+        public void Run()
         {
             if (!Directory.Exists(InputPath.Text) || !Directory.Exists(OutputPath.Text))
             {
@@ -85,7 +85,7 @@ namespace FFmpegGUI
                 return;
             }
 
-            await _engine.ConvertFilesWithSettings(InputPath.Text, OutputPath.Text);
+            _engine.ConvertFilesWithSettings(InputPath.Text, OutputPath.Text);
         }
 
         private void OnClose(object sender, System.ComponentModel.CancelEventArgs e)
