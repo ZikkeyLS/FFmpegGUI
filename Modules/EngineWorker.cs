@@ -65,29 +65,35 @@ namespace FFmpegGUI.Modules
                 media.PerformRequest();
 
                 _request = new EngineRequest();
-                _request.AddParameter($"-i \"{file.FullName}\"");
-                CompileVideoSettings(_request, media);
-                CompileAudioSettings(_request);
-                _request.AddParameter($"\"{fullName}\"");
+                _request.AddParameter($"-i \"{file.FullName}\""); // initial file
+
+                _request.AddParameter($"-threads {RenderSettings.Instance.Threads}");
 
                 switch ((RenderType)RenderSettings.Instance.RenderPrototype)
                 {
                     case RenderType.CPU:
                         break;
                     case RenderType.Intel:
-                        //  snippet.UseHardwareAcceleration(HardwareAccelerator.d3d11va, VideoCodec.h264, VideoCodec.h264);
+                        _request.AddParameter($"-hwaccel qsv");
                         break;
                     case RenderType.AMD:
-                        //  snippet.UseHardwareAcceleration(HardwareAccelerator.d3d11va, VideoCodec.h264, VideoCodec.h264);
+                        _request.AddParameter($"-hwaccel d3d11va");
                         break;
                     case RenderType.Nvidia:
-                        //  snippet.UseHardwareAcceleration(HardwareAccelerator.cuvid, VideoCodec.h264_cuvid, VideoCodec.h264_cuvid);
+                        _request.AddParameter($"-hwaccel cuda");
                         break;
                 }
+
+                if((RenderType)RenderSettings.Instance.RenderPrototype != RenderType.CPU)
+                    MessageBox.Show("Для рендеринга через GPU требуются специальные драйвера в зависимости от карты. \nПерезапустите программу в случае сбоя.");
+
+                CompileVideoSettings(_request, media);
+                CompileAudioSettings(_request);
 
                 try
                 {
                     _startTime = DateTime.Now;
+                    _request.AddParameter($"\"{fullName}\""); // final file
                     _request.OnDataReceived += OnProgress;
                     await _request.Start();
                 }
@@ -152,7 +158,9 @@ namespace FFmpegGUI.Modules
         public void Cancel(bool restart = true)
         {
             _restart = restart;
-            _request.Stop();
+
+            if(_request != null)
+                _request.Stop();
 
             if (_restart)
             {

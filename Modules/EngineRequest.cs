@@ -55,10 +55,8 @@ namespace FFmpegGUI.Modules
 
         public void Stop()
         {
-            if (_ffmpegProcess == null)
-                return;
-
-            _ffmpegProcess.Kill();
+            if (_ffmpegProcess != null)
+                _ffmpegProcess.Kill();
         }
 
         private void OnData(object o, DataReceivedEventArgs e)
