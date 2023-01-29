@@ -66,7 +66,7 @@ namespace FFmpegGUI
             Cancel.Click += (o, e) => { _engine.Cancel(); };
         }
 
-        private void UpdateText(System.Windows.Controls.TextBox text)
+        private void UpdateText(TextBox text)
         {
             var folderBrowser = new BetterFolderBrowser() { Multiselect = false, RootFolder = _previousFolder };
 
@@ -84,6 +84,9 @@ namespace FFmpegGUI
                 MessageBox.Show("Пути заданы некоректно!");
                 return;
             }
+
+            if (_engine.Working == false)
+                return;
 
             _engine.ConvertFilesWithSettings(InputPath.Text, OutputPath.Text);
         }

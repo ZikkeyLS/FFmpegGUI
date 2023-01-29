@@ -12,6 +12,7 @@ namespace FFmpegGUI.Modules
         public Action<ResponseOutput> OnDataReceived;
 
         private string _ffmpeg;
+        private Process _ffmpegProcess;
 
         public List<string> _parameters = new List<string>();
 
@@ -29,32 +30,40 @@ namespace FFmpegGUI.Modules
             {
                 string arguments = BuildArguments();
 
-                using (var p = new Process())
-                {
-                    p.StartInfo.FileName = _ffmpeg;
-                    p.StartInfo.Arguments = arguments;
-                    p.StartInfo.UseShellExecute = false;
-                    p.StartInfo.CreateNoWindow = true;
-                    p.StartInfo.RedirectStandardError = true;
-                    p.StartInfo.RedirectStandardOutput = true;
-                    p.OutputDataReceived += OnData;
-                    p.ErrorDataReceived += OnData;
-                    p.Start();
-                    p.BeginOutputReadLine();
-                    p.BeginErrorReadLine();
-                    p.WaitForExit();
-                }
+                _ffmpegProcess = new Process();
+                _ffmpegProcess.StartInfo.FileName = _ffmpeg;
+                _ffmpegProcess.StartInfo.Arguments = arguments;
+                _ffmpegProcess.StartInfo.UseShellExecute = false;
+                _ffmpegProcess.StartInfo.CreateNoWindow = true;
+                _ffmpegProcess.StartInfo.RedirectStandardError = true;
+                _ffmpegProcess.StartInfo.RedirectStandardOutput = true;
+                _ffmpegProcess.OutputDataReceived += OnData;
+                _ffmpegProcess.ErrorDataReceived += OnData;
+                _ffmpegProcess.Start();
+                _ffmpegProcess.BeginOutputReadLine();
+                _ffmpegProcess.BeginErrorReadLine();
+                _ffmpegProcess.WaitForExit();
+                _ffmpegProcess.Dispose();
+                _ffmpegProcess = null;
             });
-        }
-
-        public void OnData(object o, DataReceivedEventArgs e)
-        {
-            TryInvoke(OnDataReceived, CollectOutputData(e.Data));
         }
 
         public void AddParameter(string parameter)
         {
             _parameters.Add(parameter);
+        }
+
+        public void Stop()
+        {
+            if (_ffmpegProcess == null)
+                return;
+
+            _ffmpegProcess.Kill();
+        }
+
+        private void OnData(object o, DataReceivedEventArgs e)
+        {
+            TryInvoke(OnDataReceived, CollectOutputData(e.Data));
         }
 
         private string BuildArguments()

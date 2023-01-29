@@ -9,7 +9,6 @@ namespace FFmpegGUI.Modules
 
         private string _videoPath;
         private string _ffprobe;
-        
 
         public EngineMediaData(string videoPath, string ffprobe = "ffprobe.exe")
         {

@@ -21,17 +21,16 @@ namespace FFmpegGUI.Modules
         private ProgressBar _bar;
         private Label _data;
 
-        private int _currentFile;
-        private int _allFiles;
+        private int _currentFile = 0;
+        private int _allFiles = 1;
         private string _name;
 
         private DateTime _startTime;
 
         private bool _restart = false;
-        private CancellationTokenSource _renderToken = new CancellationTokenSource();
+        private EngineRequest _request;
 
-        private const int TimerMSDelay = 100;
-        private const int KB = 1024;
+        public bool Working => _currentFile != _allFiles;
 
         public EngineWorker(ProgressBar bar, Label data)
         {
@@ -65,11 +64,11 @@ namespace FFmpegGUI.Modules
                 EngineMediaData media = new EngineMediaData(file.FullName);
                 media.PerformRequest();
 
-                EngineRequest request = new EngineRequest();
-                request.AddParameter($"-i \"{file.FullName}\"");
-                CompileVideoSettings(request, media);
-                CompileAudioSettings(request);
-                request.AddParameter($"\"{fullName}\"");
+                _request = new EngineRequest();
+                _request.AddParameter($"-i \"{file.FullName}\"");
+                CompileVideoSettings(_request, media);
+                CompileAudioSettings(_request);
+                _request.AddParameter($"\"{fullName}\"");
 
                 switch ((RenderType)RenderSettings.Instance.RenderPrototype)
                 {
@@ -89,26 +88,25 @@ namespace FFmpegGUI.Modules
                 try
                 {
                     _startTime = DateTime.Now;
-                    request.OnDataReceived += OnProgress;
-                    await request.Start();
+                    _request.OnDataReceived += OnProgress;
+                    await _request.Start();
                 }
                 catch (Exception ex)
                 {
+                    _request.Stop();
                     File.Delete(outputFolder + $"\\{file.Name}");
 
                     MessageBox.Show("Ошибка при конвертации. (возможно проблема в типе рендера)");
                     MessageBox.Show(ex.Message);
 
-                    if (_restart)
-                    {
-                        System.Windows.Forms.Application.Restart();
-                        Application.Current.Shutdown();
-                    }
+                    System.Windows.Forms.Application.Restart();
+                    Application.Current.Shutdown();
                 }
                 finally
                 {
                     _bar.Visibility = Visibility.Hidden;
                     _data.Visibility = Visibility.Hidden;
+                    _currentFile = _allFiles;
                 }
             }
         }
@@ -154,6 +152,13 @@ namespace FFmpegGUI.Modules
         public void Cancel(bool restart = true)
         {
             _restart = restart;
+            _request.Stop();
+
+            if (_restart)
+            {
+                System.Windows.Forms.Application.Restart();
+                Application.Current.Shutdown();
+            }
         }
     }
 }
