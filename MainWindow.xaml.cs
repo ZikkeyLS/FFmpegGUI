@@ -46,10 +46,8 @@ namespace FFmpegGUI
             OutputPath.TextChanged += (e, o) => { RenderSettings.Instance.OutputPath = OutputPath.Text; };
 
             RenderType.SelectedIndex = RenderSettings.Instance.RenderPrototype;
-            RenderTypeLabel.Content = ((Label)RenderType.SelectedItem).Content;
             RenderType.SelectionChanged += (e, o) => 
             {
-                RenderTypeLabel.Content = ((Label)RenderType.SelectedItem).Content;
                 RenderSettings.Instance.RenderPrototype = RenderType.SelectedIndex;
             };
 
