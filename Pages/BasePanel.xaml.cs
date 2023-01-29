@@ -14,7 +14,6 @@ namespace FFmpegGUI.Pages
             InitializeComponent();
 
             Resolution.SelectedIndex = RenderSettings.Instance.GetConvertIndex();
-            UpdateResolutionName();
             Resolution.SelectionChanged += ResolutionSelectionChanged;
 
             IntegerInput bitRateInput = new IntegerInput(BitRate, RenderSettings.Instance.VideoBitRate, 1);
@@ -32,13 +31,7 @@ namespace FFmpegGUI.Pages
 
         private void ResolutionSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateResolutionName();
             RenderSettings.Instance.ConvertVideoSizeOption(Resolution.SelectedIndex);
-        }
-
-        private void UpdateResolutionName()
-        {
-            ResolutionName.Content = ((Label)Resolution.SelectedItem).Content;
         }
     }
 }

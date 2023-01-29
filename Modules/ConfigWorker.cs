@@ -21,8 +21,7 @@ namespace FFmpegGUI.Modules
 
     internal class ConfigWorker
     {
-        private ComboBox _box;
-        private Label _boxState;
+        private Xceed.Wpf.Toolkit.WatermarkComboBox _box;
         private ConfigProfile _currentProfile;
         private List<ConfigProfile> _profiles = new List<ConfigProfile>();
         private string _profilePath = "Profiles";
@@ -30,13 +29,16 @@ namespace FFmpegGUI.Modules
         private string fullProfilePath => @"settings.profile";
         private const string extension = "profile";
 
-        public ConfigWorker(ComboBox box, Label boxState, string profilePath = "Profiles")
+        public ConfigWorker(Xceed.Wpf.Toolkit.WatermarkComboBox box, string profilePath = "Profiles")
         {
-            _boxState = boxState;
             _box = box;
+
             Initialize(profilePath);
 
-            _box.SelectionChanged += (e, o) => { ReloadWithApply(_box.SelectedIndex); };
+            _box.SelectionChanged += (e, o) =>
+            {
+                ReloadWithApply(_box.SelectedIndex);
+            };
         }
 
         public void Initialize(string profilePath = "Profiles")
@@ -50,11 +52,6 @@ namespace FFmpegGUI.Modules
             if (!Directory.Exists(_profilePath))
                 Directory.CreateDirectory(_profilePath);
 
-            if (!File.Exists(fullProfilePath))
-                File.Create(fullProfilePath).Close();
-            else if(_profiles.Count != 0)
-                ApplicationSettings.Instance = Newtonsoft.Json.JsonConvert.DeserializeObject<ApplicationSettings>(fullProfilePath);
-
             string[] files = Directory.GetFiles(_profilePath, $"*.{extension}");
             foreach (string file in files)
             {
@@ -62,8 +59,16 @@ namespace FFmpegGUI.Modules
                 _box.Items.Add(new Label() { Content = Path.GetFileNameWithoutExtension(file) });
             }
 
-            if(_profiles.Count != 0)
+            if (!File.Exists(fullProfilePath))
+               File.Create(fullProfilePath).Close();
+            else if(_profiles.Count != 0)
+                ApplicationSettings.Instance = Newtonsoft.Json.JsonConvert.DeserializeObject<ApplicationSettings>(File.ReadAllText(fullProfilePath));   
+
+            if (_profiles.Count != 0)
+            {   
                 ApplyCurrentProfile(_profiles[ApplicationSettings.Instance.ProfileIndex]);
+                _box.SelectedIndex = ApplicationSettings.Instance.ProfileIndex;
+            }
         }
 
         public void ApplyCurrentProfile(int index) => ApplyCurrentProfile(_profiles[index]);
@@ -71,8 +76,6 @@ namespace FFmpegGUI.Modules
         public void ApplyCurrentProfile(ConfigProfile profile)
         {
             _currentProfile = profile;
-            _boxState.Content = Path.GetFileNameWithoutExtension(profile.Path);
-
             RenderSettings profileData = Newtonsoft.Json.JsonConvert.DeserializeObject<RenderSettings>(File.ReadAllText(_currentProfile.Path));
 
             if (profileData != null)

@@ -1,4 +1,4 @@
-﻿<Page x:Class="FFmpegGUI.Pages.ZoomPanel"
+﻿<Page xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"  x:Class="FFmpegGUI.Pages.ZoomPanel"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,5 +9,22 @@
       Title="ZoomPanel">
 
     <Grid>
+        <Border BorderBrush="#FF1E1E2E" BorderThickness="2" Margin="0,0,0,65" />
+        <Label FontSize="12" Content="Начало:" Margin="14,18,434,256" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate" Margin="130,14,320,252" />
+        <Label FontSize="12" Content="Частота:" Margin="14,70,434,204" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy" Margin="130,66,320,200" />
+        <Label FontSize="12" Content="Длительность:" Margin="14,123,434,151" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy1" Margin="130,119,320,147" />
+        <Label FontSize="12" Content="Масштаб:" Margin="14,178,434,96" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy2" Margin="130,174,318,92" />
+        <Label FontSize="12" Content="Приближение:" Margin="281,19,167,255" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy3" Margin="397,15,52,251" />
+        <Label FontSize="12" Content="Отдаление:" Margin="281,71,167,203" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy4" Margin="397,67,52,199" />
+        <Label FontSize="12" Content="Сдвиг:" Margin="281,124,167,150" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy5" Margin="397,120,52,146" />
+        <Label FontSize="12" Content="Процент сдвига:" Margin="281,179,167,95" Foreground="#828282"  FontWeight="Bold" FontFamily="Arial"/>
+        <local:IntInput x:Name="BitRate_Copy6" Margin="398,175,51,91" />
     </Grid>
 </Page>

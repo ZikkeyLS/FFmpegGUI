@@ -29,7 +29,7 @@ namespace FFmpegGUI
             InitializeComponent();
             Title = $"FFmpegGUI / Лицензия до {ApplicationSettings.Instance.ExpirationTime.ToString("dd.MM.yyyy")}";
 
-            _config = new ConfigWorker(ConfigProfileSwitcher, ConfigProfileLabel);
+            _config = new ConfigWorker(ConfigProfileSwitcher);
             SaveConfig.Click += (o, e) => { _config.SaveProfile(); };
             UpdateConfig.Click += (o, e) => { _config.UpdateProfile(); };
 
